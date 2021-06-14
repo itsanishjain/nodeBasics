@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+   
+    <div class="container">
+        <p>login/signup</p>
+        <p><%= greeting %></p>
+        <input id="email" type="text" placeholder="enter your email"  />
+        <input id="password" type="password" placeholder="enter your password"  />
+     <button id="signup" onclick="signup()" >signup</button>
+    </div>
+
+    <hr>
+    <div class="container">
+        <p>Profiles</p>
+        <div class="white-card">
+            here is my white card
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    const singupURL = "/signup"
+    function signup(){
+        console.log("hi signup")
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        console.log(email,password);
+
+        fetch(singupURL,{
+            method:"POST",
+            headers: {'Content-Type': 'application/json'},
+            body:JSON.stringify({
+                email:email,
+                password:password,
+            })
+        })
+
+    }
+</script>
