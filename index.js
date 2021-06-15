@@ -4,6 +4,8 @@ var mongoose = require('mongoose');
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const MONGODB_ATLAS_PASSWORD = process.env.MONGODB_ATLAS_PASSWORD
+const MONGODB_ATLAS_USERNAME = process.env.MONGODB_ATLAS_USERNAME
+const PASSCODE = process.env.PASSCODE;
 
 
 const app = express();
@@ -17,7 +19,7 @@ app.use(express.json());
 //Database Setup
 
 //Set up default mongoose connection
-var mongoDB = `mongodb+srv://admin:${MONGODB_ATLAS_PASSWORD}@cluster0.cydnc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+var mongoDB = `mongodb+srv://${MONGODB_ATLAS_USERNAME}:${MONGODB_ATLAS_PASSWORD}@cluster0.cydnc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
 mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
 
@@ -27,6 +29,7 @@ var db = mongoose.connection;
 
 //Bind connection to error event (to get notification of connection errors)
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
 
 //Define a schema
 var Schema = mongoose.Schema;
@@ -44,8 +47,32 @@ var profileModel = mongoose.model('profileModel', profileSchema );
 
 
 app.get("/",(req,res)=>{
-    res.render("index.ejs",{"greeting":"Hola"})
+    
+    res.render("home.ejs")
 })
+
+// Openai api call
+app.post("/openaiAPICall",(req,res)=>{
+    const passcode = req.body.passcode;
+    console.log(PASSCODE,passcode);
+    let message = "";
+
+    if (passcode == PASSCODE){
+        message = "Good to go";
+        console.log("Good to go");
+
+
+    } 
+    else{
+        message = "Bam! not Authorize";
+        console.log("Bam! not Authorize")
+    }
+    return res.send({message:message})
+})
+
+function openai(){
+    
+}
 
 
 app.post("/signup",(req,res)=>{
@@ -67,7 +94,8 @@ app.post("/signup",(req,res)=>{
     res.json("Post is here")
 })
 
-app.get("/read",(req,res)=>{
+app.get("/getAllProfiles",(req,res)=>{
+    const profiles = profileModel.find
     res.send("Hola")
 })
 
